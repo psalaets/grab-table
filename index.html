@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grab data from a table" />
+  <link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm_theme_white.min.css" media="(prefers-color-scheme: no-preference), (prefers-color-scheme: light)">
+  <link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm_theme_black.min.css" media="(prefers-color-scheme: dark)">
+  <title>grab-table Bookmarklet</title>
+</head>
+<body>
+  <main>
+    <h1>grab-table</h1>
+<p>This bookmarklet grabs table data from a webpage.</p>
+<h2>Install</h2>
+<p>Drag this link to the bookmarks toolbar <a href="javascript:(function(){const e=&quot;[data-can-grab]&quot;,n=[{id:&quot;json&quot;,name:&quot;json&quot;,type:&quot;application/json&quot;,ext:&quot;.json&quot;,fn:function(e){const n={caption:e.caption&amp;&amp;e.caption.textContent||null,rows:Array.from(e.rows,(e=&gt;Array.from(e.cells,(e=&gt;({type:&quot;TD&quot;===e.tagName?&quot;td&quot;:&quot;th&quot;,data:e.innerText,colSpan:e.colSpan,rowSpan:e.rowSpan})))))};return JSON.stringify(n,null,2)}},{id:&quot;html&quot;,name:&quot;html&quot;,type:&quot;text/html&quot;,ext:&quot;.html&quot;,fn:function(e){return e.outerHTML}},{id:&quot;csv&quot;,name:&quot;csv&quot;,type:&quot;text/csv&quot;,ext:&quot;.csv&quot;,fn:function(e){return Array.from(e.rows,(e=&gt;Array.from(e.cells,(e=&gt;function(e){const n=e.includes(&#39;&quot;&#39;);n&amp;&amp;(e=e.replace(/&quot;/g,&#39;&quot;&quot;&#39;));(n||e.includes(&quot;,&quot;)||e.includes(&quot;&#92;n&quot;))&amp;&amp;(e=`&quot;${e}&quot;`);return e}(e.innerText))).join(&quot;,&quot;))).join(&quot;&#92;n&quot;)}}];if(!(document.querySelectorAll(e).length&gt;0)){if(document.getElementsByTagName(&quot;table&quot;).length&gt;0){const n=function(n){const a=function(n){const t=n.createElement(&quot;style&quot;);return t.textContent=`&#92;n::backdrop {&#92;n  background-color: rgba(0, 0, 0, 0.5);&#92;n}&#92;n${e} {&#92;n  outline: 5px dashed orange !important;&#92;n}&#92;n${e}:hover {&#92;n  cursor: grab !important;&#92;n}`,n.body.appendChild(t),()=&gt;t.remove()}(n),r=Array.from(n.querySelectorAll(&quot;table&quot;));r.forEach((e=&gt;e.dataset.canGrab=&quot;&quot;));const l=r.map((e=&gt;{const n=()=&gt;{o(e,(n=&gt;t(n.fn(e),`${location.hostname.replace(/&#92;./g,&quot;-&quot;)}-table`,n)),(n=&gt;{return t=n.fn(e),void navigator.clipboard.writeText(t).then((()=&gt;alert(&quot;Copied!&quot;)),(()=&gt;alert(&quot;Failed: Cannot copy to clipboard&quot;)));var t}))()};return e.addEventListener(&quot;click&quot;,n),()=&gt;e.removeEventListener(&quot;click&quot;,n)}));return()=&gt;{a(),r.forEach((e=&gt;delete e.dataset.canGrab)),l.forEach((e=&gt;e()))}}(document),a=e=&gt;{&quot;Escape&quot;===e.key&amp;&amp;(document.removeEventListener(&quot;keydown&quot;,a),n())};document.addEventListener(&quot;keydown&quot;,a)}else alert(&quot;No tables found on the page&quot;)}function t(e,n,t){const o=n+t.ext,a=new File([e],o,{type:t.type}),r=URL.createObjectURL(a),l=document.createElement(&quot;a&quot;);l.download=o,l.href=r,document.body.appendChild(l),l.click(),setTimeout((()=&gt;{URL.revokeObjectURL(r),l.remove()}),250)}function o(e,t,o){const a=document.createElement(&quot;dialog&quot;);a.style.cssText=&quot;&#92;ncolor: #111;&#92;nbackground-color: #fff;&#92;nborder: 2px solid #111;&#92;nborder-radius: 0.5rem;&#92;nbox-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;&#92;npadding: 1.8rem;&#92;nwidth: 20rem;&#92;nfont-family: Consolas, monaco, monospace;&#92;nfont-size: 1rem;&#92;nline-height: 1.3;&#92;ntext-align: start;&quot;;const r=&quot;download&quot;,l=&quot;copy&quot;,c=&quot;all: revert; font-family: inherit;&quot;,i=c,d=document.createElement(&quot;form&quot;);return d.style.cssText=&quot;width: 100%; max-width: 100%; display: flex; flex-direction: column; gap: .8rem&quot;,d.method=&quot;dialog&quot;,d.innerHTML=`&#92;n&lt;div&gt;Grabbing ${e.rows.length} ${1===e.rows.length?&quot;row&quot;:&quot;rows&quot;}.&lt;/div&gt;&#92;n&lt;div&gt;&#92;n  &lt;label for=&quot;grab-table-format&quot; style=&quot;display: inline;&quot;&gt;Format&lt;/label&gt;&#92;n  &lt;select id=&quot;grab-table-format&quot; name=&quot;format&quot; style=&quot;${i}&quot;&gt;&#92;n    ${n.map((e=&gt;`&lt;option value=&quot;${e.id}&quot;&gt;${e.name}&lt;/option&gt;`))}&#92;n  &lt;/select&gt;&#92;n&lt;/div&gt;&#92;n&lt;div style=&quot;display: flex; gap: 1rem;&quot;&gt;&#92;n  &lt;button style=&quot;${c}&quot; value=&quot;${l}&quot;&gt;Copy&lt;/button&gt;&#92;n  &lt;button style=&quot;${c}&quot; value=&quot;${r}&quot;&gt;Download&lt;/button&gt;&#92;n  &lt;div style=&quot;flex: 1 0 auto;&quot;&gt;&lt;/div&gt;&#92;n  &lt;button style=&quot;${c}&quot;&gt;Cancel&lt;/button&gt;&#92;n&lt;/div&gt;`,a.addEventListener(&quot;close&quot;,(()=&gt;{const e=d.elements.namedItem(&quot;format&quot;),c=e instanceof HTMLSelectElement&amp;&amp;n.find((n=&gt;n.id===e.value)),i=a.returnValue;c&amp;&amp;i===r&amp;&amp;t(c),c&amp;&amp;i===l&amp;&amp;o(c),setTimeout((()=&gt;a.remove()),0)})),a.appendChild(d),document.body.appendChild(a),()=&gt;a.showModal()}})();
+">grab-table</a></p>
+<h2>Usage</h2>
+<ol>
+<li>Click grab-table in the bookmarks toolbar</li>
+<li>Click any table on the page (or press Esc to cancel)</li>
+<li>In the popup...
+<ul>
+<li>Choose a data format.</li>
+<li>Click Download or click Copy.</li>
+</ul>
+</li>
+</ol>
+<h2>Demo</h2>
+<p><a href="javascript:(function(){const e=&quot;[data-can-grab]&quot;,n=[{id:&quot;json&quot;,name:&quot;json&quot;,type:&quot;application/json&quot;,ext:&quot;.json&quot;,fn:function(e){const n={caption:e.caption&amp;&amp;e.caption.textContent||null,rows:Array.from(e.rows,(e=&gt;Array.from(e.cells,(e=&gt;({type:&quot;TD&quot;===e.tagName?&quot;td&quot;:&quot;th&quot;,data:e.innerText,colSpan:e.colSpan,rowSpan:e.rowSpan})))))};return JSON.stringify(n,null,2)}},{id:&quot;html&quot;,name:&quot;html&quot;,type:&quot;text/html&quot;,ext:&quot;.html&quot;,fn:function(e){return e.outerHTML}},{id:&quot;csv&quot;,name:&quot;csv&quot;,type:&quot;text/csv&quot;,ext:&quot;.csv&quot;,fn:function(e){return Array.from(e.rows,(e=&gt;Array.from(e.cells,(e=&gt;function(e){const n=e.includes(&#39;&quot;&#39;);n&amp;&amp;(e=e.replace(/&quot;/g,&#39;&quot;&quot;&#39;));(n||e.includes(&quot;,&quot;)||e.includes(&quot;&#92;n&quot;))&amp;&amp;(e=`&quot;${e}&quot;`);return e}(e.innerText))).join(&quot;,&quot;))).join(&quot;&#92;n&quot;)}}];if(!(document.querySelectorAll(e).length&gt;0)){if(document.getElementsByTagName(&quot;table&quot;).length&gt;0){const n=function(n){const a=function(n){const t=n.createElement(&quot;style&quot;);return t.textContent=`&#92;n::backdrop {&#92;n  background-color: rgba(0, 0, 0, 0.5);&#92;n}&#92;n${e} {&#92;n  outline: 5px dashed orange !important;&#92;n}&#92;n${e}:hover {&#92;n  cursor: grab !important;&#92;n}`,n.body.appendChild(t),()=&gt;t.remove()}(n),r=Array.from(n.querySelectorAll(&quot;table&quot;));r.forEach((e=&gt;e.dataset.canGrab=&quot;&quot;));const l=r.map((e=&gt;{const n=()=&gt;{o(e,(n=&gt;t(n.fn(e),`${location.hostname.replace(/&#92;./g,&quot;-&quot;)}-table`,n)),(n=&gt;{return t=n.fn(e),void navigator.clipboard.writeText(t).then((()=&gt;alert(&quot;Copied!&quot;)),(()=&gt;alert(&quot;Failed: Cannot copy to clipboard&quot;)));var t}))()};return e.addEventListener(&quot;click&quot;,n),()=&gt;e.removeEventListener(&quot;click&quot;,n)}));return()=&gt;{a(),r.forEach((e=&gt;delete e.dataset.canGrab)),l.forEach((e=&gt;e()))}}(document),a=e=&gt;{&quot;Escape&quot;===e.key&amp;&amp;(document.removeEventListener(&quot;keydown&quot;,a),n())};document.addEventListener(&quot;keydown&quot;,a)}else alert(&quot;No tables found on the page&quot;)}function t(e,n,t){const o=n+t.ext,a=new File([e],o,{type:t.type}),r=URL.createObjectURL(a),l=document.createElement(&quot;a&quot;);l.download=o,l.href=r,document.body.appendChild(l),l.click(),setTimeout((()=&gt;{URL.revokeObjectURL(r),l.remove()}),250)}function o(e,t,o){const a=document.createElement(&quot;dialog&quot;);a.style.cssText=&quot;&#92;ncolor: #111;&#92;nbackground-color: #fff;&#92;nborder: 2px solid #111;&#92;nborder-radius: 0.5rem;&#92;nbox-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;&#92;npadding: 1.8rem;&#92;nwidth: 20rem;&#92;nfont-family: Consolas, monaco, monospace;&#92;nfont-size: 1rem;&#92;nline-height: 1.3;&#92;ntext-align: start;&quot;;const r=&quot;download&quot;,l=&quot;copy&quot;,c=&quot;all: revert; font-family: inherit;&quot;,i=c,d=document.createElement(&quot;form&quot;);return d.style.cssText=&quot;width: 100%; max-width: 100%; display: flex; flex-direction: column; gap: .8rem&quot;,d.method=&quot;dialog&quot;,d.innerHTML=`&#92;n&lt;div&gt;Grabbing ${e.rows.length} ${1===e.rows.length?&quot;row&quot;:&quot;rows&quot;}.&lt;/div&gt;&#92;n&lt;div&gt;&#92;n  &lt;label for=&quot;grab-table-format&quot; style=&quot;display: inline;&quot;&gt;Format&lt;/label&gt;&#92;n  &lt;select id=&quot;grab-table-format&quot; name=&quot;format&quot; style=&quot;${i}&quot;&gt;&#92;n    ${n.map((e=&gt;`&lt;option value=&quot;${e.id}&quot;&gt;${e.name}&lt;/option&gt;`))}&#92;n  &lt;/select&gt;&#92;n&lt;/div&gt;&#92;n&lt;div style=&quot;display: flex; gap: 1rem;&quot;&gt;&#92;n  &lt;button style=&quot;${c}&quot; value=&quot;${l}&quot;&gt;Copy&lt;/button&gt;&#92;n  &lt;button style=&quot;${c}&quot; value=&quot;${r}&quot;&gt;Download&lt;/button&gt;&#92;n  &lt;div style=&quot;flex: 1 0 auto;&quot;&gt;&lt;/div&gt;&#92;n  &lt;button style=&quot;${c}&quot;&gt;Cancel&lt;/button&gt;&#92;n&lt;/div&gt;`,a.addEventListener(&quot;close&quot;,(()=&gt;{const e=d.elements.namedItem(&quot;format&quot;),c=e instanceof HTMLSelectElement&amp;&amp;n.find((n=&gt;n.id===e.value)),i=a.returnValue;c&amp;&amp;i===r&amp;&amp;t(c),c&amp;&amp;i===l&amp;&amp;o(c),setTimeout((()=&gt;a.remove()),0)})),a.appendChild(d),document.body.appendChild(a),()=&gt;a.showModal()}})();
+">Activate the bookmarklet</a> and then click this table.</p>
+<table>
+  <caption>Demo table</caption>
+  <thead>
+    <tr>
+      <th>Product ID</th>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Car</td>
+      <td>10000</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>House</td>
+      <td>100000</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Chair</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Desk</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Gum</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+<h2>JSON output shape</h2>
+<pre><code class="language-ts">type Cell = {
+  type: 'td' | 'th';
+  value: string;
+  colSpan: number;
+  rowSpan: number;
+};
+
+type Row = Array&lt;Cell&gt;;
+
+type JsonOutput = {
+  caption: string | null;
+  rows: Array&lt;Row&gt;;
+};
+</code></pre>
+
+  </main>
+</body>
+</html>

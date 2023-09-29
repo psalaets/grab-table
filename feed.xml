@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://example.org</id>
+    <title>grab-table bookmarklet</title>
+    <updated>2023-09-29T22:27:13.159Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://example.org"/>
+    <link rel="self" href="https://example.org/feed.xml"/>
+</feed>
