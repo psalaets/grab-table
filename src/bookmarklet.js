@@ -1,0 +1,1 @@
+alert('bookmarklet code here');
