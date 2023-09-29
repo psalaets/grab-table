@@ -4,28 +4,76 @@ layout: layout.njk
 
 # {{pkg.name}}
 
-{{pkg.description}}
+This bookmarklet grabs table data from a webpage.
 
-Write the docs here.
+## Install
 
-Bookmarklet link: <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
+Drag this link to the bookmarks toolbar <a href="javascript:{{code.latest}}">{{pkg.name}}</a>
 
----
+## Usage
 
-Everything from here down is only relevant when using the [release workflow](https://github.com/psalaets/eleventy-bookmarklet#option-2-releases).
+1. Click {{pkg.name}} in the bookmarks toolbar
+2. Click any table on the page (or press Esc to cancel)
+3. In the popup...
+    - Choose a data format.
+    - Click Download or click Copy.
 
-## Releases
+## Demo
 
-Use the `releases` collection to create a changelog:
+<a href="javascript:{{code.latest}}">Activate the bookmarklet</a> and then click this table.
 
-{% for release in collections.releases | reverse %}
-  ### v{{release.data.version}} {{"(current)" if loop.first else ""}}
+<table>
+  <caption>Demo table</caption>
+  <thead>
+    <tr>
+      <th>Product ID</th>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Car</td>
+      <td>10000</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>House</td>
+      <td>100000</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Chair</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Desk</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Gum</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 
-  Date: {{release.date | yyyymmdd}}
+## JSON output shape
 
-  Bookmarklet Link: <a href="javascript:{{release.data.code}}">{{release.data.version}}</a>
+```ts
+type Cell = {
+  type: 'td' | 'th';
+  value: string;
+  colSpan: number;
+  rowSpan: number;
+};
 
-  Release Notes: {{release.content | safe}}
-{% else %}
-  No releases yet.
-{% endfor %}
+type Row = Array<Cell>;
+
+type JsonOutput = {
+  caption: string | null;
+  rows: Array<Row>;
+};
+```
