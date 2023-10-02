@@ -150,7 +150,7 @@ background-color: #fff;
 border: 2px solid #111;
 border-radius: 0.5rem;
 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-padding: 1.8rem;
+padding: 1.5rem;
 width: 20rem;
 font-family: Consolas, monaco, monospace;
 font-size: 1rem;
