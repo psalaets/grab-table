@@ -18,11 +18,11 @@ const markedTableSelector = '[data-can-grab]';
  */
 const formats = [
   {
-    id: 'json',
-    name: 'json',
-    type: 'application/json',
-    ext: '.json',
-    fn: toJson
+    id: 'csv',
+    name: 'csv',
+    type: 'text/csv',
+    ext: '.csv',
+    fn: toCsv
   },
   {
     id: 'html',
@@ -32,11 +32,11 @@ const formats = [
     fn: toHtml
   },
   {
-    id: 'csv',
-    name: 'csv',
-    type: 'text/csv',
-    ext: '.csv',
-    fn: toCsv
+    id: 'json',
+    name: 'json',
+    type: 'application/json',
+    ext: '.json',
+    fn: toJson
   },
 ];
 
