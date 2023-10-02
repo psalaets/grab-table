@@ -70,7 +70,7 @@ function on(document) {
 
   // mark tables for user to notice them
   const tables = Array.from(document.querySelectorAll('table'));
-  tables.forEach(table => table.dataset.canGrab = '');
+  tables.forEach(markTable);
 
   // listen for clicks on tables
   const removeClickListeners = tables.map(table => {
@@ -89,9 +89,7 @@ function on(document) {
 
   return () => {
     removeGlobalStyles();
-
-    // unmark tables
-    tables.forEach(table => delete table.dataset.canGrab);
+    tables.forEach(unmarkTable);
 
     // stop listening
     removeClickListeners.forEach(remove => remove());
@@ -268,7 +266,16 @@ function toJson(table) {
  * @type {Transform}
  */
 function toHtml(table) {
-  return table.outerHTML;
+  const copy = table.cloneNode(true);
+
+  // clean up marker attribute
+  if (copy instanceof HTMLTableElement) {
+    unmarkTable(copy);
+    return copy.outerHTML;
+  }
+
+  // Should not be reachable
+  return '';
 }
 
 /**
@@ -312,4 +319,18 @@ function lastFormat(value) {
   } else {
     return db.getItem(key);
   }
+}
+
+/**
+ * @param {HTMLTableElement} table
+ */
+function markTable(table) {
+  table.dataset.canGrab = '';
+}
+
+/**
+ * @param {HTMLTableElement} table
+ */
+function unmarkTable(table) {
+  delete table.dataset.canGrab;
 }
