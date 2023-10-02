@@ -170,7 +170,7 @@ text-align: start;`;
 <div>
   <label for="grab-table-format" style="display: inline;">Format</label>
   <select id="grab-table-format" name="format" style="${selectStyles}">
-    ${formats.map(format => `<option value="${format.id}">${format.name}</option>`)}
+    ${formats.map(format => `<option value="${format.id}" ${lastFormat() === format.id ? 'selected' : ''}>${format.name}</option>`)}
   </select>
 </div>
 <div style="display: flex; gap: 1rem;">
@@ -185,11 +185,15 @@ text-align: start;`;
     const format = dropdown instanceof HTMLSelectElement && formats.find(format => format.id === dropdown.value);
     const action = dialog.returnValue;
 
-    if (format && action === downloadAction) {
-      onDownload(format);
-    }
-    if (format && action === copyAction) {
-      onCopy(format);
+    if (format) {
+      lastFormat(format.id);
+
+      const handler = {
+        [downloadAction]: onDownload,
+        [copyAction]: onCopy
+      }[action];
+
+      handler(format);
     }
 
     // destroy popup
@@ -297,4 +301,15 @@ function escapeCsvValue(value) {
   }
 
   return value;
+}
+
+function lastFormat(value) {
+  const key = 'grab-table-format';
+  const db = localStorage;
+
+  if (arguments.length === 1) {
+    db.setItem(key, value);
+  } else {
+    return db.getItem(key);
+  }
 }
